@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <meta name="theme-color" content="#fffdf6" />
+  <title>조PT의 온라인 교구</title>
+  <style>
+    :root{
+      --ink:#111111;
+      --paper:#fffdf6;
+      --white:#ffffff;
+      --muted:#ececec;
+      --accent:#ffe45e;
+      --accent2:#4d7cff;
+      --accent3:#7559ff;
+      --soft:#fff7c8;
+      --done:#b9f66d;
+      --warn:#ff6b61;
+      --shadow:7px 7px 0 var(--ink);
+      --border:3px solid var(--ink);
+      --max:1500px;
+    }
+
+    *{box-sizing:border-box}
+    html{min-height:100%;background:var(--paper)}
+    body{
+      margin:0;
+      min-height:100vh;
+      background:var(--paper);
+      color:var(--ink);
+      font-family:Arial,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;
+      line-height:1.45;
+      overflow-x:hidden;
+    }
+
+    button,a{font:inherit;color:inherit}
+    button{border:0}
+    a{text-decoration:none}
+
+    .app{
+      width:min(var(--max),100%);
+      margin:0 auto;
+      padding:18px;
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+    }
+
+    .topbar{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:18px;
+      margin-bottom:22px;
+    }
+
+    .eyebrow{
+      display:inline-block;
+      border:2px solid var(--ink);
+      background:var(--accent);
+      padding:4px 8px;
+      font-size:12px;
+      font-weight:1000;
+      margin-bottom:8px;
+    }
+
+    h1{
+      margin:0;
+      font-size:clamp(30px,4vw,48px);
+      line-height:1;
+      letter-spacing:-.045em;
+      font-weight:1000;
+      word-break:keep-all;
+    }
+
+    .view{
+      flex:1;
+    }
+
+    .category-grid{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:18px;
+      margin-top:4px;
+    }
+
+    .category-card,
+    .tool-card{
+      position:relative;
+      border:var(--border);
+      background:var(--white);
+      box-shadow:var(--shadow);
+      border-radius:0;
+      cursor:pointer;
+      transition:transform 90ms ease, box-shadow 90ms ease, background 90ms ease;
+    }
+
+    .category-card:hover,
+    .tool-card:hover{
+      transform:translate(-1px,-1px);
+      box-shadow:8px 8px 0 var(--ink);
+    }
+
+    .category-card:hover{
+      background:var(--accent);
+    }
+
+    .category-card:active,
+    .tool-card:active{
+      transform:translate(3px,3px);
+      box-shadow:3px 3px 0 var(--ink);
+    }
+
+    .category-card:focus-visible,
+    .tool-card:focus-visible,
+    .crumb-btn:focus-visible{
+      outline:4px solid var(--accent2);
+      outline-offset:3px;
+    }
+
+    .category-card{
+      min-height:142px;
+      padding:18px;
+      display:grid;
+      place-items:center;
+      text-align:center;
+      font-size:clamp(23px,2.2vw,31px);
+      line-height:1.08;
+      letter-spacing:-.035em;
+      font-weight:1000;
+    }
+
+
+    .subview-head{
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap:18px;
+      margin-bottom:18px;
+    }
+
+    .subview-head-left{min-width:0}
+
+    .crumbs{
+      display:flex;
+      align-items:center;
+      gap:6px;
+      margin-bottom:10px;
+      font-size:13px;
+      font-weight:1000;
+      flex-wrap:wrap;
+    }
+
+    .crumb-btn{
+      display:inline-flex;
+      align-items:center;
+      min-height:34px;
+      padding:5px 8px;
+      border:2px solid var(--ink);
+      background:var(--white);
+      box-shadow:3px 3px 0 var(--ink);
+      border-radius:0;
+      cursor:pointer;
+      font-weight:1000;
+      transition:transform 90ms ease, box-shadow 90ms ease;
+    }
+
+    .crumb-btn:hover{
+      transform:translate(-1px,-1px);
+      box-shadow:4px 4px 0 var(--ink);
+    }
+
+    .crumb-btn:active{
+      transform:translate(2px,2px);
+      box-shadow:1px 1px 0 var(--ink);
+    }
+
+    .crumb-sep{opacity:.48}
+
+    .section-title{
+      margin:0;
+      font-size:clamp(30px,4vw,48px);
+      line-height:1;
+      letter-spacing:-.045em;
+      font-weight:1000;
+    }
+
+    .tools-grid{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:18px;
+    }
+
+    .tool-card{
+      min-height:220px;
+      padding:18px;
+      display:flex;
+      flex-direction:column;
+      align-items:stretch;
+      text-align:left;
+    }
+
+    .tool-meta{
+      display:flex;
+      align-items:center;
+      gap:7px;
+      min-height:30px;
+      margin-bottom:16px;
+    }
+
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:28px;
+      padding:4px 8px;
+      border:2px solid var(--ink);
+      background:var(--white);
+      font-size:12px;
+      line-height:1;
+      font-weight:1000;
+      white-space:nowrap;
+    }
+
+    .chip.new{background:var(--accent)}
+    .chip.course{background:#f1f1f1}
+
+    .tool-title{
+      margin:0;
+      font-size:clamp(23px,2vw,30px);
+      line-height:1.08;
+      letter-spacing:-.035em;
+      font-weight:1000;
+      word-break:keep-all;
+    }
+
+    .tool-desc{
+      margin:12px 0 0;
+      max-width:34ch;
+      font-size:15px;
+      font-weight:800;
+      color:#2b2b2b;
+      word-break:keep-all;
+    }
+
+    .tool-action{
+      margin-top:auto;
+      padding-top:24px;
+      font-size:15px;
+      font-weight:1000;
+    }
+
+    .empty{
+      border:var(--border);
+      background:var(--white);
+      box-shadow:var(--shadow);
+      min-height:190px;
+      display:grid;
+      place-items:center;
+      padding:24px;
+      text-align:center;
+      font-size:17px;
+      font-weight:1000;
+    }
+
+    .hidden{display:none!important}
+
+    footer{
+      margin-top:34px;
+      padding:18px 0 6px;
+      border-top:2px solid var(--ink);
+      font-size:13px;
+      font-weight:1000;
+    }
+
+    @media (max-width:980px){
+      .category-grid,
+      .tools-grid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+      }
+      .category-card{min-height:128px}
+    }
+
+    @media (max-width:700px){
+      .app{padding:12px}
+      .topbar{margin-bottom:18px}
+      .category-grid{gap:12px}
+      .tools-grid{grid-template-columns:1fr;gap:14px}
+      .category-card{
+        min-height:104px;
+        padding:14px 10px;
+        font-size:22px;
+      }
+      .tool-card{min-height:200px}
+      .subview-head{
+        align-items:flex-start;
+        flex-direction:column;
+        gap:10px;
+      }
+    }
+
+    @media (max-width:420px){
+      .category-grid{gap:10px}
+      .category-card{
+        min-height:94px;
+        font-size:20px;
+      }
+      h1,.section-title{font-size:30px}
+      .tool-card{padding:16px}
+    }
+
+    @media (prefers-reduced-motion:reduce){
+      *,
+      *::before,
+      *::after{
+        scroll-behavior:auto!important;
+        transition:none!important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div>
+        <span class="eyebrow">온라인 수학 교구</span>
+        <h1>조PT의 온라인 교구</h1>
+      </div>
+    </header>
+
+    <main class="view">
+      <section id="homeView" aria-label="과목 및 학년 선택">
+        <div id="categoryGrid" class="category-grid"></div>
+      </section>
+
+      <section id="courseView" class="hidden" aria-live="polite">
+        <div class="subview-head">
+          <div class="subview-head-left">
+            <nav class="crumbs" aria-label="현재 위치">
+              <button id="homeCrumb" class="crumb-btn" type="button">전체</button>
+              <span class="crumb-sep">/</span>
+              <span id="currentCourseCrumb"></span>
+            </nav>
+            <h2 id="courseTitle" class="section-title"></h2>
+          </div>
+        </div>
+
+        <div id="toolsGrid" class="tools-grid"></div>
+        <div id="emptyState" class="empty hidden">아직 등록된 교구가 없습니다.</div>
+      </section>
+    </main>
+
+    <footer>조PT의 온라인 교구</footer>
+  </div>
+
+  <script>
+    (() => {
+      'use strict';
+
+      /*
+        =========================================================
+        조PT의 온라인 교구 — V2 External Registry
+        =========================================================
+        교구 데이터는 ./tools.json 에서 불러옵니다.
+        새 교구 등록 시 이 HTML을 수정하지 않습니다.
+      */
+
+      const COURSES = [
+        { id:'중1', label:'중1', order:10 },
+        { id:'중2', label:'중2', order:20 },
+        { id:'중3', label:'중3', order:30 },
+        { id:'고1', label:'고1', order:40 },
+        { id:'대수', label:'대수', order:50 },
+        { id:'미적분Ⅰ', label:'미적분Ⅰ', order:60 },
+        { id:'미적분Ⅱ', label:'미적분Ⅱ', order:70 },
+        { id:'확률과 통계', label:'확률과 통계', order:80 },
+        { id:'기하', label:'기하', order:90 }
+      ];
+
+      const TOOLS_URL = './tools.json';
+      let toolsRegistry = [];
+      let registryState = 'loading';
+
+      const homeView = document.getElementById('homeView');
+      const courseView = document.getElementById('courseView');
+      const categoryGrid = document.getElementById('categoryGrid');
+      const courseTitle = document.getElementById('courseTitle');
+      const currentCourseCrumb = document.getElementById('currentCourseCrumb');
+      const toolsGrid = document.getElementById('toolsGrid');
+      const emptyState = document.getElementById('emptyState');
+      const homeCrumb = document.getElementById('homeCrumb');
+
+      function esc(text){
+        return String(text ?? '')
+          .replaceAll('&','&amp;')
+          .replaceAll('<','&lt;')
+          .replaceAll('>','&gt;')
+          .replaceAll('"','&quot;')
+          .replaceAll("'",'&#039;');
+      }
+
+      function isValidCourse(courseId){
+        return COURSES.some(course => course.id === courseId);
+      }
+
+      function isSafeToolUrl(value){
+        if(typeof value !== 'string' || !value.trim()) return false;
+        try{
+          const url = new URL(value.trim(), window.location.href);
+          return url.protocol === 'https:' || url.protocol === 'http:';
+        }catch{
+          return false;
+        }
+      }
+
+      function normalizeTools(data){
+        if(!Array.isArray(data)){
+          throw new TypeError('tools.json의 최상위 값은 배열이어야 합니다.');
+        }
+
+        const seenIds = new Set();
+
+        return data.filter(tool => {
+          if(!tool || typeof tool !== 'object') return false;
+          if(typeof tool.id !== 'string' || !tool.id.trim()) return false;
+          if(seenIds.has(tool.id)) return false;
+          if(typeof tool.title !== 'string' || !tool.title.trim()) return false;
+          if(!isValidCourse(tool.course)) return false;
+          if(tool.enabled === false) return false;
+          if(!isSafeToolUrl(tool.url)) return false;
+          seenIds.add(tool.id);
+          return true;
+        });
+      }
+
+      async function loadToolsRegistry(){
+        try{
+          const response = await fetch(TOOLS_URL, { cache:'no-store' });
+          if(!response.ok){
+            throw new Error(`Registry HTTP ${response.status}`);
+          }
+
+          const data = await response.json();
+          toolsRegistry = normalizeTools(data);
+          registryState = 'ready';
+        }catch(error){
+          toolsRegistry = [];
+          registryState = 'error';
+          console.error('[조PT 온라인 교구] tools.json 로드 실패:', error);
+        }
+      }
+
+      function getEnabledTools(){
+        return toolsRegistry;
+      }
+
+      function renderCategories(){
+        const ordered = [...COURSES].sort((a,b) => a.order - b.order);
+        categoryGrid.innerHTML = ordered.map(course => `
+          <button
+            class="category-card"
+            type="button"
+            data-course="${esc(course.id)}"
+            aria-label="${esc(course.label)} 교구 보기"
+          >
+            ${esc(course.label)}
+          </button>
+        `).join('');
+
+        categoryGrid.querySelectorAll('.category-card').forEach(btn => {
+          btn.addEventListener('click', () => openCourse(btn.dataset.course, true));
+        });
+      }
+
+      function getCourse(courseId){
+        return COURSES.find(course => course.id === courseId) || null;
+      }
+
+      function getCourseTools(courseId){
+        return getEnabledTools()
+          .filter(tool => tool.course === courseId)
+          .sort((a,b) => (Number(a.order) || 9999) - (Number(b.order) || 9999));
+      }
+
+      function renderToolCard(tool){
+        return `
+          <a
+            class="tool-card"
+            href="${esc(tool.url.trim())}"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="${esc(tool.title)} 교구 실행"
+          >
+            <div class="tool-meta">
+              ${tool.isNew === true ? '<span class="chip new">NEW</span>' : ''}
+              <span class="chip course">${esc(tool.course)}</span>
+            </div>
+
+            <h3 class="tool-title">${esc(tool.title)}</h3>
+
+            ${tool.description
+              ? `<p class="tool-desc">${esc(tool.description)}</p>`
+              : ''
+            }
+
+            <div class="tool-action">교구 실행 ↗</div>
+          </a>
+        `;
+      }
+
+      function renderCourse(courseId){
+        const course = getCourse(courseId);
+        if(!course){
+          showHome(false);
+          return;
+        }
+
+        courseTitle.textContent = course.label;
+        currentCourseCrumb.textContent = course.label;
+
+        if(registryState === 'loading'){
+          toolsGrid.innerHTML = '';
+          toolsGrid.classList.add('hidden');
+          emptyState.textContent = '교구 목록을 불러오는 중입니다.';
+          emptyState.classList.remove('hidden');
+          return;
+        }
+
+        if(registryState === 'error'){
+          toolsGrid.innerHTML = '';
+          toolsGrid.classList.add('hidden');
+          emptyState.textContent = '교구 목록을 불러오지 못했습니다.';
+          emptyState.classList.remove('hidden');
+          return;
+        }
+
+        const tools = getCourseTools(courseId);
+        toolsGrid.innerHTML = tools.map(renderToolCard).join('');
+        toolsGrid.classList.toggle('hidden', tools.length === 0);
+        emptyState.textContent = '아직 등록된 교구가 없습니다.';
+        emptyState.classList.toggle('hidden', tools.length !== 0);
+      }
+
+      function openCourse(courseId, pushState){
+        const course = getCourse(courseId);
+        if(!course) return;
+
+        homeView.classList.add('hidden');
+        courseView.classList.remove('hidden');
+        renderCourse(courseId);
+
+        if(pushState){
+          history.pushState({ course:courseId }, '', `#${encodeURIComponent(courseId)}`);
+        }
+
+        window.scrollTo({ top:0, behavior:'auto' });
+      }
+
+      function showHome(pushState){
+        courseView.classList.add('hidden');
+        homeView.classList.remove('hidden');
+
+        if(pushState){
+          history.pushState({}, '', location.pathname + location.search);
+        }
+
+        window.scrollTo({ top:0, behavior:'auto' });
+      }
+
+      function routeFromLocation(){
+        const hash = decodeURIComponent(location.hash.replace(/^#/,''));
+        if(hash && getCourse(hash)){
+          openCourse(hash, false);
+        }else{
+          showHome(false);
+        }
+      }
+
+      homeCrumb.addEventListener('click', () => showHome(true));
+      window.addEventListener('popstate', routeFromLocation);
+      window.addEventListener('hashchange', routeFromLocation);
+
+      renderCategories();
+      routeFromLocation();
+
+      loadToolsRegistry().finally(() => {
+        const hash = decodeURIComponent(location.hash.replace(/^#/,''));
+        if(hash && getCourse(hash)){
+          renderCourse(hash);
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
