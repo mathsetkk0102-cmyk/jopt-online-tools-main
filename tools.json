@@ -1,1 +1,35 @@
-[]
+[
+  {
+    "id": "triangle-centers",
+    "title": "삼각형의 외심·내심·무게중심",
+    "course": "중2",
+    "unit": "삼각형의 성질",
+    "description": "외심 · 내심 · 무게중심",
+    "url": "https://celebrated-granita-402942.netlify.app/",
+    "isNew": false,
+    "order": 10,
+    "enabled": true
+  },
+  {
+    "id": "quadratic-fortress-m3",
+    "title": "이차함수 포트리스",
+    "course": "중3",
+    "unit": "이차함수",
+    "description": "이차함수 그래프 · 포물선",
+    "url": "https://flourishing-rugelach-4e38b2.netlify.app/",
+    "isNew": false,
+    "order": 10,
+    "enabled": true
+  },
+  {
+    "id": "quadratic-fortress-h1",
+    "title": "이차함수 포트리스",
+    "course": "고1",
+    "unit": "이차함수",
+    "description": "이차함수 그래프 · 포물선",
+    "url": "https://flourishing-rugelach-4e38b2.netlify.app/",
+    "isNew": false,
+    "order": 10,
+    "enabled": true
+  }
+]
