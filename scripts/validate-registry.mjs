@@ -2,7 +2,7 @@ import fs from 'node:fs';
 
 const file = new URL('../tools.json', import.meta.url);
 const allowedCourses = new Set([
-  '중1', '중2', '중3', '고1', '대수', '미적분Ⅰ', '미적분Ⅱ', '확률과 통계', '기하'
+  '중1', '중2', '중3', '고1', '대수', '미적분Ⅰ', '미적분Ⅱ', '확률과 통계', '기하', '파이데이'
 ]);
 const errors = [];
 let tools;
