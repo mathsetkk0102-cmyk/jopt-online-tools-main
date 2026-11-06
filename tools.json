@@ -11,6 +11,17 @@
     "enabled": true
   },
   {
+    "id": "linear-function-explorer",
+    "title": "일차함수 탐구",
+    "course": "중2",
+    "unit": "일차함수",
+    "description": "기울기와 y절편의 변화 탐구",
+    "url": "https://mathsetkk0102-cmyk.github.io/jopt-online-tools-main/jopt_linear_function_explorer.html",
+    "isNew": true,
+    "order": 20,
+    "enabled": true
+  },
+  {
     "id": "quadratic-fortress-m3",
     "title": "이차함수 포트리스",
     "course": "중3",
